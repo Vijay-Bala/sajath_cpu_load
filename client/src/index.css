@@ -55,3 +55,19 @@ body {
 .recharts-responsive-container {
   margin-top: 1.5%;
 }
+
+.stress-test-control {
+  margin-top: 20px;
+}
+
+.stress-test-control button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.stress-test-control p {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #333;
+}

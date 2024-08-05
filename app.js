@@ -1,14 +1,18 @@
 const express = require("express");
-const app = express();
+const { exec } = require('child_process');
 const cors = require('cors');
 const path = require("path");
 
+const app = express();
 const PORT = process.env.PORT || 3001;
+let k6Process = null;
+
 app.listen(PORT, function () {
   console.log(`listening on port ${PORT}`);
 });
 
 app.use(cors());
+app.use(express.json());
 
 let intervalStarted = false;
 const os = require("os");
@@ -47,6 +51,34 @@ function startInterval() {
     startTimes = endTimes;
   }, 1000);
 }
+
+app.post('/start-stress-test', (req, res) => {
+  if (k6Process) {
+    return res.status(400).json({ message: 'Stress test already running.' });
+  }
+
+  const k6ScriptPath = path.join(__dirname, 'stress.js');
+  k6Process = exec(`k6 run ${k6ScriptPath}`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing k6: ${error.message}`);
+    }
+    console.log(`k6 stdout: ${stdout}`);
+    console.error(`k6 stderr: ${stderr}`);
+  });
+
+  res.json({ message: 'Stress test started.' });
+});
+
+app.post('/stop-stress-test', (req, res) => {
+  if (!k6Process) {
+    return res.status(400).json({ message: 'No stress test is running.' });
+  }
+
+  k6Process.kill('SIGINT');
+  k6Process = null;
+  res.json({ message: 'Stress test stopped.' });
+});
+
 app.get("/api", function (req, res) {
   if (!intervalStarted) {
     startInterval();
