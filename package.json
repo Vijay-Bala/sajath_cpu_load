@@ -1,0 +1,20 @@
+{
+  "name": "cpu-usage",
+  "version": "1.0.0",
+  "proxy": "http://localhost:3001/",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "start": "node app.js",
+    "start-both": "npm start & cd client/ & npm start",
+    "debugger": "DEBUG=*:* npm run dev"
+  },
+  "author": "Vijay Bala",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.15.3"
+  }
+}
